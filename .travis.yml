@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - node
+  - lts/*
+script:
+  - npm run build
+  - npm run test
+deploy:
+  provider: npm
+  cleanup: false
+  skip_cleanup: true
+  email: $NPM_EMAIL
+  api_key: $NPM_API_KEY
+  on:
+    tags: true
+    repo: tlaziuk/async-iterable-emitter

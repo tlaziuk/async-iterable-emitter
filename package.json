@@ -1,0 +1,36 @@
+{
+  "name": "async-iterable-emitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cjs/index.js",
+  "module": "es/index.js",
+  "browser": "es/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.es.json && tsc --project tsconfig.cjs.json",
+    "prepack": "tsc --project tsconfig.es.json && tsc --project tsconfig.cjs.json",
+    "test": "jest --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:tlaziuk/async-iterable-emitter"
+  },
+  "homepage": "https://github.com/tlaziuk/async-iterable-emitter",
+  "author": "Tomek Łaziuk <tlaziuk+async-iterable-emitter@gmail.com> (https://tlaziuk.com/)",
+  "license": "MIT",
+  "jest": {
+    "preset": "ts-jest/presets/js-with-ts",
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.0.0",
+    "jest": "^26.0.0",
+    "ts-jest": "^26.0.0",
+    "typescript": "~4.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}
