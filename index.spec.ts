@@ -49,16 +49,10 @@ describe(AsyncIterableEmitter, () => {
     const promiseOne = iterator.next()
     const promiseTwo = iterator.next()
 
-    expect(emitter.disposesCount).toEqual(1)
-    expect(emitter.listenersCount).toEqual(1)
-
     emitter.emit(1)
 
     expect((await promiseOne).value).toEqual(1)
     expect((await promiseTwo).value).toEqual(1)
-
-    expect(emitter.disposesCount).toEqual(0)
-    expect(emitter.listenersCount).toEqual(0)
   }, 1_000)
 
   it('should be able to use in for-await-of loop', async () => {
@@ -67,9 +61,6 @@ describe(AsyncIterableEmitter, () => {
     setTimeout(
       () => {
         emitter.emit(0)
-        emitter.emit(1)
-        emitter.emit(2)
-        emitter.emit(3)
       },
       10,
     )
@@ -79,8 +70,7 @@ describe(AsyncIterableEmitter, () => {
       expect(value).toEqual(index++)
     }
 
-    expect(emitter.disposesCount).toEqual(0)
-    expect(emitter.listenersCount).toEqual(0)
+    expect(index).toEqual(1)
   }, 1_000)
 
   it('should be able to use in for-await-of loop with delay', async () => {
@@ -126,8 +116,7 @@ describe(AsyncIterableEmitter, () => {
       expect(value).toEqual(index++)
     }
 
-    expect(emitter.disposesCount).toEqual(0)
-    expect(emitter.listenersCount).toEqual(0)
+    expect(index).toEqual(6)
   }, 1_000)
 
   it('should calling dispose resulting in finishing the iterator', async () => {
@@ -142,20 +131,6 @@ describe(AsyncIterableEmitter, () => {
     expect((await nextPromise).done).toEqual(true)
   })
 
-  it('should calling iterator return result in not emitting subsequent values', async () => {
-    const emitter = new AsyncIterableEmitter<unknown>()
-
-    const iterator = emitter[Symbol.asyncIterator]()
-
-    const nextPromise = iterator.next()
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnPromise = iterator.return!()
-
-    expect((await nextPromise).done).toEqual(true)
-    expect((await returnPromise).done).toEqual(true)
-  })
-
   it('should iterator not interfere with another iterator', async () => {
     const emitter = new AsyncIterableEmitter<unknown>()
 
@@ -167,16 +142,10 @@ describe(AsyncIterableEmitter, () => {
 
     const nextTwoPromise = iteratorTwo.next()
 
-    expect(emitter.disposesCount).toEqual(2)
-    expect(emitter.listenersCount).toEqual(2)
-
     emitter.emit(0)
 
     expect((await nextOnePromise).value).toEqual(0)
     expect((await nextTwoPromise).value).toEqual(0)
-
-    expect(emitter.disposesCount).toEqual(0)
-    expect(emitter.listenersCount).toEqual(0)
   })
 
   it('should be able to dispose multiple iterators', async () => {
@@ -190,15 +159,9 @@ describe(AsyncIterableEmitter, () => {
 
     const nextTwoPromise = iteratorTwo.next()
 
-    expect(emitter.disposesCount).toEqual(2)
-    expect(emitter.listenersCount).toEqual(2)
-
     emitter.dispose()
 
     expect((await nextOnePromise).done).toEqual(true)
     expect((await nextTwoPromise).done).toEqual(true)
-
-    expect(emitter.disposesCount).toEqual(0)
-    expect(emitter.listenersCount).toEqual(0)
   })
 })
